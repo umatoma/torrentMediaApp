@@ -12,3 +12,8 @@ jobs:
       - run:
         name: test
         command: make test
+workflows:
+  version: 2
+  testAll:
+    jobs:
+      - testServerApp
