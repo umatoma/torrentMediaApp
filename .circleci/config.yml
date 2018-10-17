@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  testServerApp:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/serverApp
+    steps:
+      - checkout
+      - run:
+        name: install
+        command: npm install
+      - run:
+        name: test
+        command: make test
