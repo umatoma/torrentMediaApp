@@ -1,9 +1,27 @@
 import express from 'express'
 
-const router = express.Router()
+export default class IndexRouter {
+    constructor({ downloadedFileDirPath, asyncFileSystem }) {
+        this.downloadedFileDirPath = downloadedFileDirPath
+        this.asyncFileSystem = asyncFileSystem
+        this.router = express.Router()
 
-router.get('/title', function (req, res, next) {
-    res.json({ title: 'Express' })
-})
+        const asyncWrapper = fn => (...args) => fn(...args).catch(args[2])
+        this.router.get('/files', asyncWrapper(this.getFilesHandler.bind(this)))
+    }
 
-export default router
+    getRouter() {
+        return this.router
+    }
+
+    async getFilesHandler(req, res) {
+        const dirents = await this.asyncFileSystem
+            .readdirAsync(this.downloadedFileDirPath, { withFileTypes: true })
+        const files = dirents.map(dirent => ({
+            name: dirent.name,
+            type: dirent.isDirectory() ? 'directory' : 'file',
+        }))
+
+        res.json(files)
+    }
+}
