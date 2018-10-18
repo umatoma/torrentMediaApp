@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "babel-node ./bin/startServer.js",
-        "test": "mocha --require @babel/register --recursive test"
+        "test": "npx mocha test --require @babel/register --recursive --reporter mocha-circleci-reporter"
     },
     "dependencies": {
         "@babel/core": "^7.1.2",
@@ -20,6 +20,7 @@
         "@babel/register": "^7.0.0",
         "chai": "^4.2.0",
         "mocha": "^5.2.0",
+        "mocha-circleci-reporter": "0.0.3",
         "sinon": "^7.0.0",
         "supertest": "^3.3.0"
     },

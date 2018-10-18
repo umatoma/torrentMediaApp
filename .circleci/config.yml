@@ -3,15 +3,22 @@ jobs:
   testServerApp:
     docker:
       - image: circleci/node:10
-    working_directory: ~/workspace
+    working_directory: ~/junit
     steps:
       - checkout
       - run:
           name: install
-          command: cd serverApp && npm install
+          command: cd serverApp; npm install
       - run:
           name: test
-          command: cd serverApp && make test
+          command: cd serverApp; make test
+          environment:
+            MOCHA_FILE: junit/serverApp/test-results.xml
+          when: always
+      - store_test_results:
+          path: ~/junit
+      - store_artifacts:
+          path: ~/junit
 workflows:
   version: 2
   testAll:
