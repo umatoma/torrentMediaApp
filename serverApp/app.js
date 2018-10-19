@@ -3,11 +3,13 @@ import express from 'express'
 import logger from 'morgan'
 import path from 'path'
 import asyncFileSystem from './libs/asyncFileSystem'
+import fileStreaming from './libs/fileStreaming'
 import IndexRouter from './routes/index'
 
 const indexRouter = new IndexRouter({
     downloadedFileDirPath: path.resolve(__dirname, 'download'),
     asyncFileSystem,
+    fileStreaming,
 }).getRouter()
 
 const app = express()
