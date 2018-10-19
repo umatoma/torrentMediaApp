@@ -13,18 +13,25 @@ describe('index router', () => {
     beforeEach(() => {
         sandbox = sinon.createSandbox()
 
+        const torrentClient = {
+            add: () => {},
+        }
+
         testDouble = {
             readdirAsyncStub: sandbox.stub(asyncFileSystem, 'readdirAsync'),
             sendStub: sandbox.stub(fileStreaming, 'send'),
+            torrentClientAddStub: sandbox.stub(torrentClient, 'add')
         }
 
         indexRouter = new IndexRouter({
             downloadedFileDirPath: '/path/to/download',
             asyncFileSystem,
             fileStreaming,
+            torrentClient,
         })
 
         app = express()
+        app.use(express.json())
         app.use(indexRouter.getRouter())
     })
 
@@ -107,6 +114,63 @@ describe('index router', () => {
                 sinon.match.object,
                 '/path/to/download/FILE_A.txt'
             )
+        })
+    })
+
+    describe('POST /torrent', () => {
+        context('when requesting with magnet uri', () => {
+            beforeEach(async () => {
+                res = await supertest(app).post('/torrent')
+                    .send({ torrentId: 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10' })
+            })
+
+            it('should return 200', () => {
+                expect(res.status).to.equal(200)
+            })
+
+            it('adds the torrentId to downloading torrent list', () => {
+                sinon.assert.calledWith(testDouble.torrentClientAddStub,
+                    'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10',
+                    sinon.match({ path: '/path/to/download' }),
+                )
+            })
+        })
+
+        context('when requesting with torrent url', () => {
+            beforeEach(async () => {
+                res = await supertest(app).post('/torrent')
+                    .send({ torrentId: 'http://example.com/abc.torrent' })
+            })
+
+            it('should return 200', () => {
+                expect(res.status).to.equal(200)
+            })
+        })
+
+        context('when requesting with invalid torrentId', () => {
+            it('should return 400', async () => {
+                res = await supertest(app).post('/torrent')
+                    .send({ torrentId: 'TEST_TORRENT_ID' })
+
+
+                expect(res.status).to.equal(400)
+            })
+
+            it('should return invalid type error message', async () => {
+                res = await supertest(app).post('/torrent')
+                    .send({ torrentId: 12345 })
+
+
+                expect(res.body.message).to.equal('torrentId should be a string')
+            })
+
+            it('should return format error message', async () => {
+                res = await supertest(app).post('/torrent')
+                    .send({ torrentId: 'ID:INVALID_FORMAT' })
+
+
+                expect(res.body.message).to.equal('torrentId should be one of magnet uri, http/https url')
+            })
         })
     })
 })
