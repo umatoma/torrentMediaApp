@@ -31,19 +31,19 @@ export default class IndexRouter {
 
         this.router.get(
             '/files',
-            asyncWrapper(this.getFilesHandler.bind(this))
+            asyncWrapper(this.getFilesRouteHandler.bind(this))
         )
         this.router.get(
             '/file/streaming/:fileName',
-            asyncWrapper(this.getFileStreaming.bind(this))
+            asyncWrapper(this.getFileStreamingRouteHandler.bind(this))
         )
         this.router.get(
             '/torrents',
-            asyncWrapper(this.getTorrents.bind(this))
+            asyncWrapper(this.getTorrentsRouteHandler.bind(this))
         )
         this.router.post(
             '/torrent',
-            asyncWrapper(this.postTorrent.bind(this))
+            asyncWrapper(this.postTorrentRouteHandler.bind(this))
         )
     }
 
@@ -51,7 +51,7 @@ export default class IndexRouter {
         return this.router
     }
 
-    async getFilesHandler(req, res) {
+    async getFilesRouteHandler(req, res) {
         const dirents = await this.asyncFileSystem.readdirAsync(
             this.downloadedFileDirPath,
             { withFileTypes: true }
@@ -64,18 +64,18 @@ export default class IndexRouter {
         res.json(files)
     }
 
-    async getFileStreaming(req, res) {
+    async getFileStreamingRouteHandler(req, res) {
         const fileName = req.params.fileName
         const filePath = path.resolve(this.downloadedFileDirPath, fileName)
         this.fileStreaming.send(req, filePath).pipe(res)
     }
 
-    async getTorrents(req, res) {
+    async getTorrentsRouteHandler(req, res) {
         const torrents = this.torrentClient.getTorrents()
         res.json(torrents)
     }
 
-    async postTorrent(req, res) {
+    async postTorrentRouteHandler(req, res) {
         const torrentId = req.body.torrentId
 
         try {
