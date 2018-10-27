@@ -1,6 +1,26 @@
 import express from 'express'
 import path from 'path'
 
+function asyncWrapper(fn) {
+    return (...args) => fn(...args).catch(args[2])
+}
+
+class ParamsValidator {
+    static validateTorrentId(torrentId) {
+        if (typeof torrentId !== 'string') {
+            throw new Error('torrentId should be a string')
+        }
+
+        if (
+            torrentId.startsWith('magnet:') === false &&
+            torrentId.startsWith('http:') === false &&
+            torrentId.startsWith('https:') === false
+        ) {
+            throw new Error('torrentId should be one of magnet uri, http/https url')
+        }
+    }
+}
+
 export default class IndexRouter {
     constructor({ downloadedFileDirPath, asyncFileSystem, fileStreaming, torrentClient }) {
         this.downloadedFileDirPath = downloadedFileDirPath
@@ -8,8 +28,6 @@ export default class IndexRouter {
         this.fileStreaming = fileStreaming
         this.torrentClient = torrentClient
         this.router = express.Router()
-
-        const asyncWrapper = fn => (...args) => fn(...args).catch(args[2])
 
         this.router.get(
             '/files',
@@ -43,8 +61,10 @@ export default class IndexRouter {
     }
 
     async getFilesHandler(req, res) {
-        const dirents = await this.asyncFileSystem
-            .readdirAsync(this.downloadedFileDirPath, { withFileTypes: true })
+        const dirents = await this.asyncFileSystem.readdirAsync(
+            this.downloadedFileDirPath,
+            { withFileTypes: true }
+        )
         const files = dirents.map(dirent => ({
             name: dirent.name,
             type: dirent.isDirectory() ? 'directory' : 'file',
@@ -60,24 +80,10 @@ export default class IndexRouter {
     }
 
     async postTorrent(req, res) {
-        const validateTorrentId = (torrentId) => {
-            if (typeof torrentId !== 'string') {
-                throw new Error('torrentId should be a string')
-            }
-
-            if (
-                torrentId.startsWith('magnet:') === false &&
-                torrentId.startsWith('http:') === false &&
-                torrentId.startsWith('https:') === false
-            ) {
-                throw new Error('torrentId should be one of magnet uri, http/https url')
-            }
-        }
-
-        const torrentId = req.body.torrentId;
+        const torrentId = req.body.torrentId
 
         try {
-            validateTorrentId(torrentId)
+            ParamsValidator.validateTorrentId(torrentId)
         } catch (e) {
             res.status(400)
             res.json({ message: e.message })
@@ -86,7 +92,7 @@ export default class IndexRouter {
 
         const addOptions = {
             path: this.downloadedFileDirPath,
-        };
+        }
         this.torrentClient.add(torrentId, addOptions, this.addTorrentHandler.bind(this))
 
         res.status(200)
