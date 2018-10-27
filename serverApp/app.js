@@ -5,13 +5,17 @@ import path from 'path'
 import WebTorrent from 'webtorrent'
 import asyncFileSystem from './libs/asyncFileSystem'
 import fileStreaming from './libs/fileStreaming'
+import TorrentClient from './libs/torrentClient'
 import IndexRouter from './routes/index'
 
+const downloadedFileDirPath = path.resolve(__dirname, 'download')
+const torrentClient = new TorrentClient(new WebTorrent(), downloadedFileDirPath)
+
 const indexRouter = new IndexRouter({
-    downloadedFileDirPath: path.resolve(__dirname, 'download'),
+    downloadedFileDirPath,
     asyncFileSystem,
     fileStreaming,
-    torrentClient: new WebTorrent(),
+    torrentClient,
 }).getRouter()
 
 const app = express()

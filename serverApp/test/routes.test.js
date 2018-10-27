@@ -4,23 +4,23 @@ import sinon from 'sinon'
 import supertest from 'supertest'
 import asyncFileSystem from '../libs/asyncFileSystem'
 import fileStreaming from '../libs/fileStreaming'
+import TorrentClient from '../libs/torrentClient'
 import IndexRouter from '../routes/index'
 
-describe('index router', () => {
+describe('Routing', () => {
 
     let sandbox, indexRouter, app, testDouble, res
 
     beforeEach(() => {
         sandbox = sinon.createSandbox()
 
-        const torrentClient = {
-            add: () => {},
-        }
+        const torrentClient = new TorrentClient()
 
         testDouble = {
             readdirAsyncStub: sandbox.stub(asyncFileSystem, 'readdirAsync'),
             sendStub: sandbox.stub(fileStreaming, 'send'),
-            torrentClientAddStub: sandbox.stub(torrentClient, 'add')
+            torrentClientAddTorrentStub: sandbox.stub(torrentClient, 'addTorrent'),
+            torrentClientGetTorrentsStub: sandbox.stub(torrentClient, 'getTorrents'),
         }
 
         indexRouter = new IndexRouter({
@@ -117,6 +117,49 @@ describe('index router', () => {
         })
     })
 
+    describe('GET /torrents', () => {
+        context('when there are some downloading torrents', () => {
+            beforeEach(async () => {
+                testDouble.torrentClientGetTorrentsStub.returns([
+                    {
+                        files: [
+                            { name: 'FILE_A.txt', progress: 0.1 },
+                            { name: 'FILE_B.txt', progress: 0.1 },
+                        ],
+                        progress: 0.5,
+                    },
+                    {
+                        files: [
+                            { name: 'FILE_C.txt', progress: 0.2 },
+                        ],
+                        progress: 0.6,
+                    },
+                ])
+
+
+                res = await supertest(app).get('/torrents')
+            })
+
+            it('should return the torrents', () => {
+                expect(res.body).to.deep.equal([
+                    {
+                        files: [
+                            { name: 'FILE_A.txt', progress: 0.1 },
+                            { name: 'FILE_B.txt', progress: 0.1 },
+                        ],
+                        progress: 0.5,
+                    },
+                    {
+                        files: [
+                            { name: 'FILE_C.txt', progress: 0.2 },
+                        ],
+                        progress: 0.6,
+                    },
+                ])
+            })
+        })
+    })
+
     describe('POST /torrent', () => {
         context('when requesting with magnet uri', () => {
             beforeEach(async () => {
@@ -129,9 +172,8 @@ describe('index router', () => {
             })
 
             it('adds the torrentId to downloading torrent list', () => {
-                sinon.assert.calledWith(testDouble.torrentClientAddStub,
+                sinon.assert.calledWith(testDouble.torrentClientAddTorrentStub,
                     'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10',
-                    sinon.match({ path: '/path/to/download' }),
                 )
             })
         })

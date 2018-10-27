@@ -37,6 +37,10 @@ export default class IndexRouter {
             '/file/streaming/:fileName',
             asyncWrapper(this.getFileStreaming.bind(this))
         )
+        this.router.get(
+            '/torrents',
+            asyncWrapper(this.getTorrents.bind(this))
+        )
         this.router.post(
             '/torrent',
             asyncWrapper(this.postTorrent.bind(this))
@@ -45,19 +49,6 @@ export default class IndexRouter {
 
     getRouter() {
         return this.router
-    }
-
-    addTorrentHandler(torrent) {
-        torrent.on('done', () => {
-            console.log('Done downloading')
-            torrent.destroy((error) => {
-                if (error) {
-                    console.log(error)
-                } else {
-                    console.log('Destroy a torrent instance')
-                }
-            })
-        })
     }
 
     async getFilesHandler(req, res) {
@@ -79,6 +70,11 @@ export default class IndexRouter {
         this.fileStreaming.send(req, filePath).pipe(res)
     }
 
+    async getTorrents(req, res) {
+        const torrents = this.torrentClient.getTorrents()
+        res.json(torrents)
+    }
+
     async postTorrent(req, res) {
         const torrentId = req.body.torrentId
 
@@ -90,10 +86,7 @@ export default class IndexRouter {
             return
         }
 
-        const addOptions = {
-            path: this.downloadedFileDirPath,
-        }
-        this.torrentClient.add(torrentId, addOptions, this.addTorrentHandler.bind(this))
+        this.torrentClient.addTorrent(torrentId)
 
         res.status(200)
         res.end()
