@@ -140,6 +140,10 @@ describe('Routing', () => {
                 res = await supertest(app).get('/torrents')
             })
 
+            it('should return 200', () => {
+                expect(res.status).to.equal(200)
+            })
+
             it('should return the torrents', () => {
                 expect(res.body).to.deep.equal([
                     {
@@ -156,6 +160,23 @@ describe('Routing', () => {
                         progress: 0.6,
                     },
                 ])
+            })
+        })
+
+        context('when there is no downloading torrents', () => {
+            beforeEach(async () => {
+                testDouble.torrentClientGetTorrentsStub.returns([])
+
+
+                res = await supertest(app).get('/torrents')
+            })
+
+            it('should return 200', () => {
+                expect(res.status).to.equal(200)
+            })
+
+            it('should return empty array', () => {
+                expect(res.body).to.deep.equal([])
             })
         })
     })
