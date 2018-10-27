@@ -85,7 +85,7 @@ describe('Routing', () => {
             })
         })
 
-        context('when there are no files in the downloaded file directory', () => {
+        context('when there is no files in the downloaded file directory', () => {
             beforeEach(async () => {
                 testDouble.readdirAsyncStub.resolves([])
 
