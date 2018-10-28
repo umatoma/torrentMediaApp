@@ -17,8 +17,23 @@ jobs:
           when: always
       - store_test_results:
           path: ~/junit
+  testAndroidApp:
+    docker:
+      - image: circleci/android:api-28-alpha
+    working_directory: ~/code
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: cd androidApp && make installDependencies
+      - run:
+          name: test
+          command: cd androidApp && make unitTest
+      - store_test_results:
+          path: androidApp/app/build/test-results
 workflows:
   version: 2
   testAll:
     jobs:
       - testServerApp
+      - testAndroidApp

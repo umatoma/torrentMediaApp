@@ -1,3 +1,6 @@
+installDependencies:
+	./gradlew androidDependencies
+
 unitTest:
 	./gradlew test
 
