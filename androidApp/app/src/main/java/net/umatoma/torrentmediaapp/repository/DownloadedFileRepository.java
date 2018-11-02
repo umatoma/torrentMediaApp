@@ -1,8 +1,6 @@
-package net.umatoma.torrentmediaapp;
+package net.umatoma.torrentmediaapp.repository;
 
 import android.util.Log;
-
-import net.umatoma.torrentmediaapp.repository.RepositoryConfig;
 
 import java.util.List;
 

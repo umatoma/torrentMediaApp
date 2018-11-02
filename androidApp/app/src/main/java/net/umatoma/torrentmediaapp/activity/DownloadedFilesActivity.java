@@ -1,10 +1,13 @@
-package net.umatoma.torrentmediaapp;
+package net.umatoma.torrentmediaapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import net.umatoma.torrentmediaapp.R;
+import net.umatoma.torrentmediaapp.TorrentMediaApplication;
+import net.umatoma.torrentmediaapp.repository.DownloadedFileRepository;
 import net.umatoma.torrentmediaapp.repository.RepositoryConfig;
 
 import java.util.ArrayList;

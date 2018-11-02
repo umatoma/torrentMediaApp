@@ -2,6 +2,8 @@ package net.umatoma.torrentmediaapp;
 
 import android.content.Context;
 
+import net.umatoma.torrentmediaapp.activity.MainActivity;
+
 import org.hamcrest.core.IsAnything;
 import org.junit.After;
 import org.junit.Rule;
