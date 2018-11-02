@@ -36,4 +36,4 @@ workflows:
   testAll:
     jobs:
       - testServerApp
-      - testAndroidApp
+      # - testAndroidApp
