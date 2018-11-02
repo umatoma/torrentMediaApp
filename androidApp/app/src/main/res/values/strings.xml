@@ -1,3 +1,4 @@
 <resources>
-  <string name="app_name">torrentMediaApp</string>
+    <string name="app_name">torrentMediaApp</string>
+    <string name="TEST_STRING">APP</string>
 </resources>
