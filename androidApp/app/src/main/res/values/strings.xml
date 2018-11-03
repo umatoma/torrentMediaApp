@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">torrentMediaApp</string>
     <string name="hello_world">Hello World!</string>
-
-    <string name="repository_server_url">http://10.0.2.2:8080</string>
 </resources>

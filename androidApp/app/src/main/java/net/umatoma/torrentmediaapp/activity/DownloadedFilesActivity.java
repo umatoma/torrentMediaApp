@@ -31,7 +31,7 @@ public class DownloadedFilesActivity extends AppCompatActivity {
     private void loadDownloadedFiles() {
         final ArrayAdapter<String> adapter = DownloadedFilesActivity.this.downloadedFilesAdapter;
 
-        DownloadedFileRepository downloadedFileRepository = new DownloadedFileRepository(this);
+        DownloadedFileRepository downloadedFileRepository = new DownloadedFileRepository();
         downloadedFileRepository.getDownloadedFiles(new DownloadedFileRepository.DownloadedFileRepositoryCallback() {
             @Override
             public void onResponse(String[] downloadedFiles) {
