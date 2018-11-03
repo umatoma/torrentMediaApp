@@ -6,9 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import net.umatoma.torrentmediaapp.R;
-import net.umatoma.torrentmediaapp.TorrentMediaApplication;
 import net.umatoma.torrentmediaapp.repository.DownloadedFileRepository;
-import net.umatoma.torrentmediaapp.repository.RepositoryConfig;
 
 import java.util.ArrayList;
 
@@ -32,10 +30,8 @@ public class DownloadedFilesActivity extends AppCompatActivity {
 
     private void loadDownloadedFiles() {
         final ArrayAdapter<String> adapter = DownloadedFilesActivity.this.downloadedFilesAdapter;
-        TorrentMediaApplication torrentMediaApp = (TorrentMediaApplication) getApplication();
 
-        RepositoryConfig repositoryConfig = torrentMediaApp.getRepositoryConfig();
-        DownloadedFileRepository downloadedFileRepository = new DownloadedFileRepository(repositoryConfig);
+        DownloadedFileRepository downloadedFileRepository = new DownloadedFileRepository(this);
         downloadedFileRepository.getDownloadedFiles(new DownloadedFileRepository.DownloadedFileRepositoryCallback() {
             @Override
             public void onResponse(String[] downloadedFiles) {

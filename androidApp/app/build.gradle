@@ -8,15 +8,18 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName '1.0'
-        // testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        testInstrumentationRunner 'net.umatoma.torrentmediaapp.TorrentMediaAndroidTestRunner'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        mock {
+            initWith debug
+        }
     }
+    testBuildType 'mock'
     testOptions {
         unitTests {
             includeAndroidResources true

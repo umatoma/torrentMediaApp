@@ -1,6 +1,9 @@
 package net.umatoma.torrentmediaapp.repository;
 
+import android.content.Context;
 import android.util.Log;
+
+import net.umatoma.torrentmediaapp.R;
 
 import java.util.List;
 
@@ -17,9 +20,10 @@ public class DownloadedFileRepository {
 
     private DownloadedFilesService downloadedFilesService;
 
-    public DownloadedFileRepository(RepositoryConfig repositoryConfig) {
+    public DownloadedFileRepository(Context context) {
+        String baseUrl = context.getString(R.string.repository_server_url);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(repositoryConfig.getServerUrl())
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         this.downloadedFilesService = retrofit.create(DownloadedFilesService.class);
