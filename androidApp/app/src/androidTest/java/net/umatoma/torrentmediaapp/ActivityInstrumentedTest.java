@@ -4,7 +4,6 @@ import android.content.Context;
 
 import net.umatoma.torrentmediaapp.activity.MainActivity;
 
-import org.hamcrest.core.IsAnything;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,12 +17,11 @@ import androidx.test.rule.ActivityTestRule;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -43,18 +41,9 @@ public class ActivityInstrumentedTest {
 
     private MockWebServer mockWebServer = null;
 
-    private void startMockWebServer() throws IOException {
+    private void startMockWebServer(Dispatcher dispatcher) throws IOException {
         this.mockWebServer = new MockWebServer();
-        this.mockWebServer.setDispatcher(new Dispatcher() {
-            @Override
-            public MockResponse dispatch(RecordedRequest request) {
-                String requestPath = request.getPath();
-                if (requestPath.equals("/files")) {
-                    return new MockResponse().setResponseCode(200).setBody("[\"AAA\",\"BBB\"]");
-                }
-                return new MockResponse().setResponseCode(400);
-            }
-        });
+        this.mockWebServer.setDispatcher(dispatcher);
         this.mockWebServer.start(8080);
     }
 
@@ -85,19 +74,24 @@ public class ActivityInstrumentedTest {
 
     @Test
     public void whenClickingCastButton_ItShouldStartDownloadedFilesActivity() throws IOException {
-        startMockWebServer();
+        TestServerDispatcher dispatcher = new TestServerDispatcher()
+                .setGetFilesMockResponse(new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("[" +
+                                "{\"name\": \"FILE_A.txt\", \"type\": \"file\"}," +
+                                "{\"name\": \"DIRECTORY_X\", \"type\": \"directory\"}" +
+                                "]"
+                        ));
+        startMockWebServer(dispatcher);
 
 
         onView(withText("Show Downloaded Files")).perform(click());
 
 
-        onData(IsAnything.anything())
-                .inAdapterView(withId(R.id.downloaded_files_list_view))
-                .atPosition(0)
-                .check(matches(withText("AAA")));
-        onData(IsAnything.anything())
-                .inAdapterView(withId(R.id.downloaded_files_list_view))
-                .atPosition(1)
-                .check(matches(withText("BBB")));
+        onView(withId(R.id.downloaded_files_recycler_view))
+                .check(matches(hasDescendant(withText("FILE_A.txt"))))
+                .check(matches(hasDescendant(withText("file"))))
+                .check(matches(hasDescendant(withText("DIRECTORY_X"))))
+                .check(matches(hasDescendant(withText("directory"))));
     }
 }

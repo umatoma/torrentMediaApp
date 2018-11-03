@@ -1,10 +1,8 @@
 package net.umatoma.torrentmediaapp.repository;
 
-import android.content.Context;
 import android.util.Log;
 
 import net.umatoma.torrentmediaapp.BuildConfig;
-import net.umatoma.torrentmediaapp.R;
 
 import java.util.List;
 
@@ -30,17 +28,16 @@ public class DownloadedFileRepository {
     }
 
     public void getDownloadedFiles(final DownloadedFileRepositoryCallback callback) {
-        this.downloadedFilesService.getDownloadedFiles().enqueue(new Callback<List<String>>() {
+        this.downloadedFilesService.getDownloadedFiles().enqueue(new Callback<List<DownloadedFile>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                List<String> body = response.body();
-                String[] downloadedFiles = body.toArray(new String[body.size()]);
+            public void onResponse(Call<List<DownloadedFile>> call, Response<List<DownloadedFile>> response) {
+                List<net.umatoma.torrentmediaapp.repository.DownloadedFile> downloadedFiles = response.body();
 
                 callback.onResponse(downloadedFiles);
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(Call<List<DownloadedFile>> call, Throwable t) {
                 Log.e(TAG, "onFailure: ", t);
             }
         });
@@ -48,11 +45,10 @@ public class DownloadedFileRepository {
 
     public interface DownloadedFilesService {
         @GET("/files")
-        Call<List<String>> getDownloadedFiles();
+        Call<List<DownloadedFile>> getDownloadedFiles();
     }
 
     public interface DownloadedFileRepositoryCallback {
-        void onResponse(String[] downloadedFiles);
+        void onResponse(List<net.umatoma.torrentmediaapp.repository.DownloadedFile> downloadedFiles);
     }
-
 }

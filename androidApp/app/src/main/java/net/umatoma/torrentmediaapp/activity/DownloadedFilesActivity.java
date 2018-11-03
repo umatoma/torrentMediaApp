@@ -2,41 +2,46 @@ package net.umatoma.torrentmediaapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import net.umatoma.torrentmediaapp.R;
+import net.umatoma.torrentmediaapp.repository.DownloadedFile;
 import net.umatoma.torrentmediaapp.repository.DownloadedFileRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadedFilesActivity extends AppCompatActivity {
 
-    private ArrayAdapter<String> downloadedFilesAdapter;
+    private DownloadedFilesAdapter downloadedFilesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloaded_files);
 
-        this.downloadedFilesAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+        this.downloadedFilesAdapter = new DownloadedFilesAdapter();
 
-        ListView downloadedFilesListView = findViewById(R.id.downloaded_files_list_view);
-        downloadedFilesListView.setAdapter(this.downloadedFilesAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, layoutManager.getOrientation());
+
+        RecyclerView downloadedFilesRecyclerView = findViewById(R.id.downloaded_files_recycler_view);
+        downloadedFilesRecyclerView.setLayoutManager(layoutManager);
+        downloadedFilesRecyclerView.addItemDecoration(itemDecoration);
+        downloadedFilesRecyclerView.setAdapter(this.downloadedFilesAdapter);
 
         loadDownloadedFiles();
     }
 
     private void loadDownloadedFiles() {
-        final ArrayAdapter<String> adapter = DownloadedFilesActivity.this.downloadedFilesAdapter;
+        final DownloadedFilesAdapter adapter = DownloadedFilesActivity.this.downloadedFilesAdapter;
 
         DownloadedFileRepository downloadedFileRepository = new DownloadedFileRepository();
         downloadedFileRepository.getDownloadedFiles(new DownloadedFileRepository.DownloadedFileRepositoryCallback() {
             @Override
-            public void onResponse(String[] downloadedFiles) {
-                adapter.clear();
-                adapter.addAll(downloadedFiles);
+            public void onResponse(List<DownloadedFile> downloadedFiles) {
+                adapter.setDownloadedFiles(downloadedFiles);
                 adapter.notifyDataSetChanged();
             }
         });
