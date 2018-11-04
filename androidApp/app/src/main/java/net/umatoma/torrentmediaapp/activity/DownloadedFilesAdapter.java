@@ -13,10 +13,12 @@ import net.umatoma.torrentmediaapp.repository.DownloadedFile;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DownloadedFilesAdapter
         extends RecyclerView.Adapter<DownloadedFilesAdapter.DownloadedFileViewHolder> {
 
     private List<DownloadedFile> downloadedFiles;
+    private OnClickItemListener onClickItemListener;
 
     public DownloadedFilesAdapter() {
         this.downloadedFiles = new ArrayList<>();
@@ -31,8 +33,14 @@ public class DownloadedFilesAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DownloadedFileViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DownloadedFileViewHolder holder, final int position) {
         holder.bind(this.downloadedFiles.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DownloadedFilesAdapter.this.onClickItemListener.onClickItem(view, position);
+            }
+        });
     }
 
     @Override
@@ -42,6 +50,14 @@ public class DownloadedFilesAdapter
 
     public void setDownloadedFiles(List<DownloadedFile> downloadedFiles) {
         this.downloadedFiles = downloadedFiles;
+    }
+
+    public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
+        this.onClickItemListener = onClickItemListener;
+    }
+
+    public interface OnClickItemListener {
+        void onClickItem(View view, int position);
     }
 
     public class DownloadedFileViewHolder extends RecyclerView.ViewHolder {

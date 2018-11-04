@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DownloadedFilesActivity"></activity>
+        <activity android:name=".activity.DownloadedFilesActivity" />
+        <activity android:name=".activity.CastFileActivity"></activity>
     </application>
 
 </manifest>
