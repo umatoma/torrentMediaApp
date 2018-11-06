@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/media_renderer_device_friendly_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        style="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/tv_icon_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="BRAVIA KJ-40W700C" />
+
+    <TextView
+        android:id="@+id/media_renderer_device_display_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        style="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintStart_toEndOf="@+id/tv_icon_iv"
+        app:layout_constraintTop_toBottomOf="@+id/media_renderer_device_friendly_name_tv"
+        tool:text="Sony Corporation KJ-40W700C MINT1.7.0.1" />
+
+    <ImageView
+        android:id="@+id/tv_icon_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_tv_black_24dp" />
+</android.support.constraint.ConstraintLayout>

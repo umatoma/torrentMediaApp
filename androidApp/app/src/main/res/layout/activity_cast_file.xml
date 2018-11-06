@@ -6,4 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".activity.CastFileActivity">
 
+    <TextView
+        android:id="@+id/cast_file_name_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Title"
+        tools:text="FILE_X.txt" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/media_renderer_devices_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cast_file_name_tv" />
 </android.support.constraint.ConstraintLayout>

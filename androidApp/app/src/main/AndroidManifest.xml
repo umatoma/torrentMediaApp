@@ -3,6 +3,10 @@
     package="net.umatoma.torrentmediaapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".TorrentMediaApplication"
@@ -21,6 +25,8 @@
         </activity>
         <activity android:name=".activity.DownloadedFilesActivity" />
         <activity android:name=".activity.CastFileActivity"></activity>
+
+        <service android:name=".service.CustomAndroidUpnpService" />
     </application>
 
 </manifest>

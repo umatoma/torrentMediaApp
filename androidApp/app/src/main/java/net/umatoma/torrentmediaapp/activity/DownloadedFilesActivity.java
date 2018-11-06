@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import net.umatoma.torrentmediaapp.R;
+import net.umatoma.torrentmediaapp.adapter.DownloadedFilesAdapter;
+import net.umatoma.torrentmediaapp.adapter.OnClickItemListener;
 import net.umatoma.torrentmediaapp.repository.DownloadedFile;
 import net.umatoma.torrentmediaapp.repository.DownloadedFileRepository;
 
@@ -25,10 +27,14 @@ public class DownloadedFilesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_downloaded_files);
 
         this.downloadedFilesAdapter = new DownloadedFilesAdapter();
-        this.downloadedFilesAdapter.setOnClickItemListener(new DownloadedFilesAdapter.OnClickItemListener() {
+        this.downloadedFilesAdapter.setOnClickItemListener(new OnClickItemListener() {
             @Override
             public void onClickItem(View view, int position) {
+                DownloadedFile downloadedFile = DownloadedFilesActivity.this.downloadedFilesAdapter.getItem(position);
+
                 Intent startCastFileActivityIntent = new Intent(DownloadedFilesActivity.this, CastFileActivity.class);
+                startCastFileActivityIntent.putExtra(CastFileActivity.KEY_FILE_NAME, downloadedFile.getName());
+
                 startActivity(startCastFileActivityIntent);
             }
         });

@@ -26,12 +26,13 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class DownloadedFilesActivityInstrumentedTest {
+public class DownloadedFilesActivityTest {
     @Rule
     public ActivityTestRule<DownloadedFilesActivity> activityTestRule =
             new ActivityTestRule<>(DownloadedFilesActivity.class, true, false);
@@ -80,11 +81,12 @@ public class DownloadedFilesActivityInstrumentedTest {
     }
 
     @Test
-    public void whenClickingTheDownloadedFileItem_ItShouldStartCastFileActivity() {
+    public void whenClickingTheDownloadedFileItem_ItShouldStartCastFileActivityWithFileName() {
         onView(withId(R.id.downloaded_files_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
 
         intended(hasComponent(CastFileActivity.class.getName()));
+        intended(hasExtra("fileName", "FILE_A.txt"));
     }
 }

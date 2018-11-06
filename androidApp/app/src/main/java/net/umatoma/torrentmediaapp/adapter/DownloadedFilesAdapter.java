@@ -1,4 +1,4 @@
-package net.umatoma.torrentmediaapp.activity;
+package net.umatoma.torrentmediaapp.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -48,16 +48,16 @@ public class DownloadedFilesAdapter
         return this.downloadedFiles.size();
     }
 
+    public DownloadedFile getItem(int position) {
+        return this.downloadedFiles.get(position);
+    }
+
     public void setDownloadedFiles(List<DownloadedFile> downloadedFiles) {
         this.downloadedFiles = downloadedFiles;
     }
 
     public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
         this.onClickItemListener = onClickItemListener;
-    }
-
-    public interface OnClickItemListener {
-        void onClickItem(View view, int position);
     }
 
     public class DownloadedFileViewHolder extends RecyclerView.ViewHolder {
