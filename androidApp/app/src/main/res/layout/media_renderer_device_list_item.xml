@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/media_renderer_device_friendly_name_tv"
-        style="@style/TextAppearance.AppCompat.Medium"
+        style="@style/TextAppearance.AppCompat.Widget.DropDownItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -32,8 +32,8 @@
 
     <ImageView
         android:id="@+id/tv_icon_iv"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_tv_black_24dp" />
