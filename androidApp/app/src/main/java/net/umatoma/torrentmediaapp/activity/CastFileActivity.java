@@ -39,7 +39,6 @@ public class CastFileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String fileName = intent.getStringExtra(KEY_FILE_NAME);
 
-
         TextView fileNameTextView = findViewById(R.id.cast_file_name_tv);
         fileNameTextView.setText(fileName);
 
@@ -62,44 +61,46 @@ public class CastFileActivity extends AppCompatActivity {
         devicesRecycleView.setAdapter(this.mediaRendererDevicesAdapter);
 
 
+        startUpnpService();
+    }
+
+    private void startUpnpService() {
         Intent androidUpnpServiceIntent = new Intent(this, CustomAndroidUpnpService.class);
+
+        final DefaultRegistryListener registryListener = new DefaultRegistryListener() {
+            @Override
+            public void deviceAdded(Registry registry, final Device device) {
+                DeviceType deviceType = device.getType();
+
+                if (deviceType.getType().equals("MediaRenderer")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CastFileActivity.this
+                                    .mediaRendererDevicesAdapter
+                                    .addItem(device)
+                                    .notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        };
+
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 AndroidUpnpService androidUpnpService = (AndroidUpnpService) service;
-                androidUpnpService.getRegistry().addListener(new CustomRegistryListener());
-
+                androidUpnpService.getRegistry().addListener(registryListener);
                 androidUpnpService.getControlPoint().search();
             }
 
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
+            public void onServiceDisconnected(ComponentName name) {}
         };
 
         getApplicationContext().bindService(
                 androidUpnpServiceIntent,
                 serviceConnection,
                 Context.BIND_AUTO_CREATE);
-    }
-
-    public class CustomRegistryListener extends DefaultRegistryListener {
-        @Override
-        public void deviceAdded(Registry registry, final Device device) {
-            DeviceType deviceType = device.getType();
-
-            if (deviceType.getType().equals("MediaRenderer")) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        CastFileActivity.this
-                                .mediaRendererDevicesAdapter
-                                .addItem(device)
-                                .notifyDataSetChanged();
-                    }
-                });
-            }
-        }
     }
 }

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="8dp">
 
     <TextView
-        android:id="@+id/downloaded_file_name"
+        android:id="@+id/downloaded_file_name_tv"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Title"
         tools:text="FILE_A.txt" />
 
     <TextView
-        android:id="@+id/downloaded_file_type"
+        android:id="@+id/downloaded_file_type_tv"
+        style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/downloaded_file_name"
-        style="@style/TextAppearance.AppCompat.Caption"
+        app:layout_constraintTop_toBottomOf="@id/downloaded_file_name_tv"
         tools:text="file" />
 </android.support.constraint.ConstraintLayout>

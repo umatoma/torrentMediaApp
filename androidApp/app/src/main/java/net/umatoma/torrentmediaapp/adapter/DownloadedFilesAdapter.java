@@ -52,7 +52,7 @@ public class DownloadedFilesAdapter
         return this.downloadedFiles.get(position);
     }
 
-    public void setDownloadedFiles(List<DownloadedFile> downloadedFiles) {
+    public void setItems(List<DownloadedFile> downloadedFiles) {
         this.downloadedFiles = downloadedFiles;
     }
 
@@ -68,8 +68,8 @@ public class DownloadedFilesAdapter
         public DownloadedFileViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.fileNameTextView = itemView.findViewById(R.id.downloaded_file_name);
-            this.fileTypeTextView = itemView.findViewById(R.id.downloaded_file_type);
+            this.fileNameTextView = itemView.findViewById(R.id.downloaded_file_name_tv);
+            this.fileTypeTextView = itemView.findViewById(R.id.downloaded_file_type_tv);
         }
 
         public void bind(DownloadedFile downloadedFile) {

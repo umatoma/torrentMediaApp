@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/show_downloading_files_button"
+        android:id="@+id/show_downloading_files_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Show Downloaded Files"

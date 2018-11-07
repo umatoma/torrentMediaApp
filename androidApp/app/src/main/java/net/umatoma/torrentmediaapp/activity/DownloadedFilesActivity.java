@@ -42,7 +42,7 @@ public class DownloadedFilesActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, layoutManager.getOrientation());
 
-        RecyclerView downloadedFilesRecyclerView = findViewById(R.id.downloaded_files_recycler_view);
+        RecyclerView downloadedFilesRecyclerView = findViewById(R.id.downloaded_files_rv);
         downloadedFilesRecyclerView.setLayoutManager(layoutManager);
         downloadedFilesRecyclerView.addItemDecoration(itemDecoration);
         downloadedFilesRecyclerView.setAdapter(this.downloadedFilesAdapter);
@@ -57,7 +57,7 @@ public class DownloadedFilesActivity extends AppCompatActivity {
         downloadedFileRepository.getDownloadedFiles(new DownloadedFileRepository.DownloadedFileRepositoryCallback() {
             @Override
             public void onResponse(List<DownloadedFile> downloadedFiles) {
-                adapter.setDownloadedFiles(downloadedFiles);
+                adapter.setItems(downloadedFiles);
                 adapter.notifyDataSetChanged();
             }
         });

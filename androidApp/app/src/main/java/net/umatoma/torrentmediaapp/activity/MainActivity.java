@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button showDownloadingFilesButton = findViewById(R.id.show_downloading_files_button);
+        Button showDownloadingFilesButton = findViewById(R.id.show_downloading_files_btn);
         showDownloadingFilesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

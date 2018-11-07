@@ -73,7 +73,7 @@ public class DownloadedFilesActivityTest {
 
     @Test
     public void whenStartingTheActivity_ItShouldDisplayDownloadedFiles() {
-        onView(withId(R.id.downloaded_files_recycler_view))
+        onView(withId(R.id.downloaded_files_rv))
                 .check(matches(hasDescendant(withText("FILE_A.txt"))))
                 .check(matches(hasDescendant(withText("file"))))
                 .check(matches(hasDescendant(withText("DIRECTORY_X"))))
@@ -82,7 +82,7 @@ public class DownloadedFilesActivityTest {
 
     @Test
     public void whenClickingTheDownloadedFileItem_ItShouldStartCastFileActivityWithFileName() {
-        onView(withId(R.id.downloaded_files_recycler_view))
+        onView(withId(R.id.downloaded_files_rv))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
 
