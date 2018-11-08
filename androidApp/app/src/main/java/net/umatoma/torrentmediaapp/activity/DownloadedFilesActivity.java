@@ -3,7 +3,6 @@ package net.umatoma.torrentmediaapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -26,6 +25,7 @@ public class DownloadedFilesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloaded_files);
 
+
         this.downloadedFilesAdapter = new DownloadedFilesAdapter();
         this.downloadedFilesAdapter.setOnClickItemListener(new OnClickItemListener() {
             @Override
@@ -39,13 +39,11 @@ public class DownloadedFilesActivity extends AppCompatActivity {
             }
         });
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, layoutManager.getOrientation());
 
         RecyclerView downloadedFilesRecyclerView = findViewById(R.id.downloaded_files_rv);
-        downloadedFilesRecyclerView.setLayoutManager(layoutManager);
-        downloadedFilesRecyclerView.addItemDecoration(itemDecoration);
+        downloadedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         downloadedFilesRecyclerView.setAdapter(this.downloadedFilesAdapter);
+
 
         loadDownloadedFiles();
     }

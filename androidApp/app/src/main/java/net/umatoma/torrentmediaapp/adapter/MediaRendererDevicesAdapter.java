@@ -52,6 +52,12 @@ public class MediaRendererDevicesAdapter
         return this.mediaRendererDevices.get(position);
     }
 
+    public MediaRendererDevicesAdapter setItems(List<Device> devices) {
+        this.mediaRendererDevices.clear();
+        this.mediaRendererDevices.addAll(devices);
+        return this;
+    }
+
     public MediaRendererDevicesAdapter addItem(Device device) {
         this.mediaRendererDevices.add(device);
         return this;
