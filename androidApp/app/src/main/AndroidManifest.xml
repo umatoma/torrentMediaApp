@@ -24,9 +24,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.DownloadedFilesActivity" />
-        <activity android:name=".activity.CastFileActivity"></activity>
+        <activity android:name=".activity.CastFileActivity" />
 
         <service android:name=".service.CustomAndroidUpnpService" />
+
+        <activity android:name=".activity.SearchTorrentActivity"></activity>
     </application>
 
 </manifest>

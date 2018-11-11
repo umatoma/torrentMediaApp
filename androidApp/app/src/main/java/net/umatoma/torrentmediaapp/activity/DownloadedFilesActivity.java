@@ -1,10 +1,16 @@
 package net.umatoma.torrentmediaapp.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import net.umatoma.torrentmediaapp.R;
@@ -46,6 +52,32 @@ public class DownloadedFilesActivity extends AppCompatActivity {
 
 
         loadDownloadedFiles();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.downloaded_files_activity_menu, menu);
+
+        Drawable icon = menu.findItem(R.id.search_torrent).getIcon();
+        icon.mutate();
+        icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_torrent:
+                Intent startSearchTorrentActivityIntent =
+                        new Intent(this, SearchTorrentActivity.class);
+                startActivity(startSearchTorrentActivityIntent);
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadDownloadedFiles() {
