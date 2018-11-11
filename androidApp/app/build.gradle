@@ -20,21 +20,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField 'String', 'SERVER_URL', '"http://10.0.2.2:3000"'
+            buildConfigField 'String', 'TORRENT_URL', '"https://www.tokyotosho.info"'
         }
         debug {
             buildConfigField 'String', 'SERVER_URL', '"http://10.0.2.2:3000"'
+            buildConfigField 'String', 'TORRENT_URL', '"https://www.tokyotosho.info"'
         }
         local {
             signingConfig signingConfigs.debug
             debuggable true
 
             buildConfigField 'String', 'SERVER_URL', '"http://192.168.0.2:3000"'
+            buildConfigField 'String', 'TORRENT_URL', '"https://www.tokyotosho.info"'
         }
         mock {
             signingConfig signingConfigs.debug
             debuggable true
 
             buildConfigField 'String', 'SERVER_URL', '"http://127.0.0.1:8080"'
+            buildConfigField 'String', 'TORRENT_URL', '"http://127.0.0.1:8080"'
         }
     }
     testBuildType 'mock'
@@ -60,6 +64,7 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
 
     implementation 'org.fourthline.cling:cling-core:2.1.2'
     implementation 'org.fourthline.cling:cling-support:2.1.2'

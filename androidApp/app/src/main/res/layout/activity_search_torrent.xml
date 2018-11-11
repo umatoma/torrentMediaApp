@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".activity.SearchTorrentActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/torrents_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
 </android.support.constraint.ConstraintLayout>

@@ -31,7 +31,7 @@ public class DownloadedFileRepository {
         this.downloadedFilesService.getDownloadedFiles().enqueue(new Callback<List<DownloadedFile>>() {
             @Override
             public void onResponse(Call<List<DownloadedFile>> call, Response<List<DownloadedFile>> response) {
-                List<net.umatoma.torrentmediaapp.repository.DownloadedFile> downloadedFiles = response.body();
+                List<DownloadedFile> downloadedFiles = response.body();
 
                 callback.onResponse(downloadedFiles);
             }
@@ -49,6 +49,6 @@ public class DownloadedFileRepository {
     }
 
     public interface DownloadedFileRepositoryCallback {
-        void onResponse(List<net.umatoma.torrentmediaapp.repository.DownloadedFile> downloadedFiles);
+        void onResponse(List<DownloadedFile> downloadedFiles);
     }
 }
