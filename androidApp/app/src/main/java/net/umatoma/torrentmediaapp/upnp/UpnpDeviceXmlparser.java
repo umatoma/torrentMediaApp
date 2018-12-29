@@ -9,7 +9,13 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 public class UpnpDeviceXmlparser {
-    public static UpnpDevice parseXml(String xmlString) throws Exception {
+    private UpnpServer upnpServer;
+
+    public UpnpDeviceXmlparser(UpnpServer upnpServer) {
+        this.upnpServer = upnpServer;
+    }
+
+    public UpnpDevice parseXml(String xmlString) throws Exception {
         StringReader stringReader = new StringReader(xmlString);
 
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -35,7 +41,7 @@ public class UpnpDeviceXmlparser {
         throw new Exception("Failed to parse the XML");
     }
 
-    private static UpnpDevice readDevice(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private UpnpDevice readDevice(XmlPullParser parser) throws IOException, XmlPullParserException {
         String deviceType = null;
         String friendlyName = null;
         ArrayList<UpnpService> serviceList = new ArrayList<>();
@@ -57,10 +63,10 @@ public class UpnpDeviceXmlparser {
             }
         }
 
-        return new UpnpDevice(deviceType, friendlyName, serviceList);
+        return new UpnpDevice(deviceType, friendlyName, serviceList, this.upnpServer);
     }
 
-    private static ArrayList<UpnpService> readServiceList(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private ArrayList<UpnpService> readServiceList(XmlPullParser parser) throws IOException, XmlPullParserException {
         ArrayList<UpnpService> serviceList = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -79,7 +85,7 @@ public class UpnpDeviceXmlparser {
         return serviceList;
     }
 
-    private static UpnpService readService(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private UpnpService readService(XmlPullParser parser) throws IOException, XmlPullParserException {
         String serviceType = null;
         String serviceId = null;
         String SCPDURL = null;
@@ -110,7 +116,7 @@ public class UpnpDeviceXmlparser {
         return new UpnpService(serviceType, serviceId, SCPDURL, controlURL, eventSubURL);
     }
 
-    private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
             result = parser.getText();
@@ -119,7 +125,7 @@ public class UpnpDeviceXmlparser {
         return result;
     }
 
-    private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             throw new IllegalStateException();
         }

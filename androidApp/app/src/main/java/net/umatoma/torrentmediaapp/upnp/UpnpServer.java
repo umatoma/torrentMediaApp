@@ -30,15 +30,4 @@ public class UpnpServer {
     public String getUsn() {
         return usn;
     }
-
-    @Override
-    public String toString() {
-        return new StringBuffer()
-                .append("ip: " + this.ip + ", ")
-                .append("location: " + this.location + ", ")
-                .append("server: " + this.server + ", ")
-                .append("serverType: " + this.serverType + ", ")
-                .append("usn: " + this.usn)
-                .toString();
-    }
 }

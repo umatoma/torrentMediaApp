@@ -34,4 +34,8 @@ public class UpnpService {
     public String getEventSubURL() {
         return eventSubURL;
     }
+
+    public boolean isAVTransportType() {
+        return this.serviceType.equals("urn:schemas-upnp-org:service:AVTransport:1");
+    }
 }

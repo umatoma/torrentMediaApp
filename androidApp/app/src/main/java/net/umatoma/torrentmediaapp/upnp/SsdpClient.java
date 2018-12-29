@@ -150,7 +150,7 @@ public class SsdpClient {
         return socket;
     }
 
-    private void getSsdpDevice(UpnpServer upnpServer, final GetSsdpDeviceCallback callback) {
+    private void getSsdpDevice(final UpnpServer upnpServer, final GetSsdpDeviceCallback callback) {
         Request request = new Request.Builder()
                 .url(upnpServer.getLocation())
                 .get()
@@ -167,7 +167,7 @@ public class SsdpClient {
             public void onResponse(Call call, Response response) {
                 try {
                     String xmlString = response.body().string();
-                    UpnpDevice upnpDevice = UpnpDeviceXmlparser.parseXml(xmlString);
+                    UpnpDevice upnpDevice = new UpnpDeviceXmlparser(upnpServer).parseXml(xmlString);
                     callback.onSuccess(upnpDevice);
                 } catch (Exception e) {
                     callback.onFailure(e);

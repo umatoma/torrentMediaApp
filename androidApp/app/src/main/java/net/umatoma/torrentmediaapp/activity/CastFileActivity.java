@@ -6,16 +6,19 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.umatoma.torrentmediaapp.R;
 import net.umatoma.torrentmediaapp.adapter.MediaRendererDevicesAdapter;
 import net.umatoma.torrentmediaapp.adapter.OnClickItemListener;
 import net.umatoma.torrentmediaapp.upnp.SsdpClient;
+import net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer;
 import net.umatoma.torrentmediaapp.upnp.UpnpDevice;
+
+import static net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer.*;
 
 public class CastFileActivity extends AppCompatActivity {
 
@@ -40,7 +43,7 @@ public class CastFileActivity extends AppCompatActivity {
             @Override
             public void onClickItem(View view, int position) {
                 UpnpDevice upnpDevice = CastFileActivity.this.mediaRendererDevicesAdapter.getItem(position);
-                Toast.makeText(CastFileActivity.this, upnpDevice.getFriendlyName(), Toast.LENGTH_SHORT).show();
+                CastFileActivity.this.playMovie(upnpDevice);
             }
         });
 
@@ -63,6 +66,7 @@ public class CastFileActivity extends AppCompatActivity {
             }
         });
 
+
         discoverMediaRendererDevices();
     }
 
@@ -84,8 +88,33 @@ public class CastFileActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(Exception e) {}
+                    public void onError(Exception e) {
+                    }
                 })
                 .startDiscovery(this);
+    }
+
+    private void playMovie(UpnpDevice upnpDevice) {
+        String currentUri = "http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4";
+        final UpnpAVTransportPlayer avTransportPlayer = new UpnpAVTransportPlayer(upnpDevice);
+        avTransportPlayer.setAVTransportURI(currentUri, new CommandCallback() {
+            @Override
+            public void onCommandFailure(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCommandSuccess() {
+                avTransportPlayer.play(new CommandCallback() {
+                    @Override
+                    public void onCommandFailure(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onCommandSuccess() {}
+                });
+            }
+        });
     }
 }
