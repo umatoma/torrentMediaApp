@@ -30,7 +30,7 @@ android {
             signingConfig signingConfigs.debug
             debuggable true
 
-            buildConfigField 'String', 'SERVER_URL', '"http://192.168.0.2:3000"'
+            buildConfigField 'String', 'SERVER_URL', '"http://192.168.0.3:3000"'
             buildConfigField 'String', 'TORRENT_URL', '"https://www.tokyotosho.info"'
         }
         mock {
@@ -66,12 +66,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
 
-    implementation 'org.fourthline.cling:cling-core:2.1.2'
-    implementation 'org.fourthline.cling:cling-support:2.1.2'
-    implementation 'org.eclipse.jetty:jetty-server:8.1.22.v20160922'
-    implementation 'org.eclipse.jetty:jetty-servlet:8.1.22.v20160922'
-    implementation 'org.eclipse.jetty:jetty-client:8.1.22.v20160922'
-    implementation 'org.slf4j:slf4j-jdk14:1.7.25'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:4.0'

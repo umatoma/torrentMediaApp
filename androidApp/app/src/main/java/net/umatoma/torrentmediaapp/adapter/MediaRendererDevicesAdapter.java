@@ -8,8 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.umatoma.torrentmediaapp.R;
-
-import org.fourthline.cling.model.meta.Device;
+import net.umatoma.torrentmediaapp.upnp.UpnpDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 public class MediaRendererDevicesAdapter
         extends RecyclerView.Adapter<MediaRendererDevicesAdapter.MediaRendererDeviceViewHolder> {
 
-    private List<Device> mediaRendererDevices;
+    private List<UpnpDevice> mediaRendererDevices;
     private OnClickItemListener onClickItemListener;
 
     public MediaRendererDevicesAdapter() {
@@ -48,18 +47,18 @@ public class MediaRendererDevicesAdapter
         return this.mediaRendererDevices.size();
     }
 
-    public Device getItem(int position) {
+    public UpnpDevice getItem(int position) {
         return this.mediaRendererDevices.get(position);
     }
 
-    public MediaRendererDevicesAdapter setItems(List<Device> devices) {
+    public MediaRendererDevicesAdapter setItems(List<UpnpDevice> upnpDevices) {
         this.mediaRendererDevices.clear();
-        this.mediaRendererDevices.addAll(devices);
+        this.mediaRendererDevices.addAll(upnpDevices);
         return this;
     }
 
-    public MediaRendererDevicesAdapter addItem(Device device) {
-        this.mediaRendererDevices.add(device);
+    public MediaRendererDevicesAdapter addItem(UpnpDevice upnpDevice) {
+        this.mediaRendererDevices.add(upnpDevice);
         return this;
     }
 
@@ -81,9 +80,9 @@ public class MediaRendererDevicesAdapter
                     itemView.findViewById(R.id.media_renderer_device_friendly_name_tv);
         }
 
-        public void bind(Device device) {
-            this.deviceDisplayNameTextView.setText(device.getDisplayString());
-            this.deviceFriendlyNameTextView.setText(device.getDetails().getFriendlyName());
+        public void bind(UpnpDevice upnpDevice) {
+            this.deviceDisplayNameTextView.setText(upnpDevice.getDeviceType());
+            this.deviceFriendlyNameTextView.setText(upnpDevice.getFriendlyName());
         }
     }
 }
