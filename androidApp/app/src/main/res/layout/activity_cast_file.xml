@@ -1,53 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.CastFileActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/media_renderer_devices_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:itemCount="8"
-        tools:listitem="@layout/media_renderer_device_list_item" />
-
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/cast_file_footer_cl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:background="@android:color/background_light"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/horizontal_line_view"
-            android:layout_width="match_parent"
-            android:layout_height="2dip"
-            android:background="#ddd" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/cast_action_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/cast_file_footer_cl"
+            app:layout_constraintEnd_toEndOf="@+id/cast_file_vv"
+            app:srcCompat="@drawable/ic_cast_black_24dp" />
 
-        <TextView
-            android:id="@+id/cast_file_name_caption_tv"
-            style="@style/TextAppearance.AppCompat.Caption"
+        <VideoView
+            android:id="@+id/cast_file_vv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/cast_file_footer_cl"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cast_file_footer_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="8dp"
-            android:text="Cast file name"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view" />
+            android:layout_gravity="bottom"
+            android:background="@android:color/background_light"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/cast_file_name_tv"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="FILE_X.txt" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/cast_file_name_tv">
+
+                <ImageButton
+                    android:id="@+id/play_movie_ib"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="200dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
         <TextView
-            android:id="@+id/cast_file_name_tv"
+            android:id="@+id/upnp_devices_header"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/cast_file_name_caption_tv"
-            tools:text="FILE_X.txt" />
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:text="MediaRenderer" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/media_renderer_devices_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/upnp_devices_header"
+            tools:listitem="@layout/media_renderer_device_list_item" />
     </android.support.constraint.ConstraintLayout>
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

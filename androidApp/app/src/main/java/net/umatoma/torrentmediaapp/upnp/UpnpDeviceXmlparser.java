@@ -44,6 +44,7 @@ public class UpnpDeviceXmlparser {
     private UpnpDevice readDevice(XmlPullParser parser) throws IOException, XmlPullParserException {
         String deviceType = null;
         String friendlyName = null;
+        String manufacturer = null;
         ArrayList<UpnpService> serviceList = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -58,12 +59,14 @@ public class UpnpDeviceXmlparser {
                 friendlyName = readText(parser);
             } else if (name.equals("serviceList")) {
                 serviceList = readServiceList(parser);
+            } else if (name.equals("manufacturer")) {
+                manufacturer = readText(parser);
             } else {
                 skip(parser);
             }
         }
 
-        return new UpnpDevice(deviceType, friendlyName, serviceList, this.upnpServer);
+        return new UpnpDevice(deviceType, friendlyName, manufacturer, serviceList, this.upnpServer);
     }
 
     private ArrayList<UpnpService> readServiceList(XmlPullParser parser) throws IOException, XmlPullParserException {

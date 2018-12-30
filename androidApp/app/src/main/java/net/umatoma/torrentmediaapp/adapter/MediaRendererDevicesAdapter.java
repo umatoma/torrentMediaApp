@@ -69,20 +69,24 @@ public class MediaRendererDevicesAdapter
     public class MediaRendererDeviceViewHolder extends RecyclerView.ViewHolder {
 
         TextView deviceDisplayNameTextView;
-        TextView deviceFriendlyNameTextView;
+        TextView deviceManufacturerTextView;
+        TextView deviceServerLocationTextView;
 
         public MediaRendererDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
 
             this.deviceDisplayNameTextView =
-                    itemView.findViewById(R.id.media_renderer_device_display_name_tv);
-            this.deviceFriendlyNameTextView =
                     itemView.findViewById(R.id.media_renderer_device_friendly_name_tv);
+            this.deviceManufacturerTextView =
+                    itemView.findViewById(R.id.media_renderer_device_manufacturer_tv);
+            this.deviceServerLocationTextView =
+                    itemView.findViewById(R.id.media_renderer_server_location_tv);
         }
 
         public void bind(UpnpDevice upnpDevice) {
-            this.deviceDisplayNameTextView.setText(upnpDevice.getDeviceType());
-            this.deviceFriendlyNameTextView.setText(upnpDevice.getFriendlyName());
+            this.deviceDisplayNameTextView.setText(upnpDevice.getFriendlyName());
+            this.deviceManufacturerTextView.setText(upnpDevice.getManufacturer());
+            this.deviceServerLocationTextView.setText(upnpDevice.getServerLocation());
         }
     }
 }

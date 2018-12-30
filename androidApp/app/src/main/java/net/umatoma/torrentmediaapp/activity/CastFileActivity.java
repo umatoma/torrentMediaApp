@@ -1,15 +1,16 @@
 package net.umatoma.torrentmediaapp.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import net.umatoma.torrentmediaapp.R;
 import net.umatoma.torrentmediaapp.adapter.MediaRendererDevicesAdapter;
@@ -18,12 +19,16 @@ import net.umatoma.torrentmediaapp.upnp.SsdpClient;
 import net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer;
 import net.umatoma.torrentmediaapp.upnp.UpnpDevice;
 
-import static net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer.*;
+import static net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer.CommandCallback;
 
 public class CastFileActivity extends AppCompatActivity {
 
     public static final String KEY_FILE_NAME = "fileName";
 
+    private VideoView videoView;
+    private ConstraintLayout footerConstraintLayout;
+    private FloatingActionButton castActionButton;
+    private BottomSheetBehavior<View> bottomSheetBehavior;
     private MediaRendererDevicesAdapter mediaRendererDevicesAdapter;
 
     @Override
@@ -31,11 +36,15 @@ public class CastFileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cast_file);
 
-        Intent intent = getIntent();
-        String fileName = intent.getStringExtra(KEY_FILE_NAME);
+
+        this.castActionButton = findViewById(R.id.cast_action_fab);
+        this.videoView = findViewById(R.id.cast_file_vv);
+        this.footerConstraintLayout = findViewById(R.id.cast_file_footer_cl);
+        this.bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
+
 
         TextView fileNameTextView = findViewById(R.id.cast_file_name_tv);
-        fileNameTextView.setText(fileName);
+        fileNameTextView.setText(getIntent().getStringExtra(KEY_FILE_NAME));
 
 
         this.mediaRendererDevicesAdapter = new MediaRendererDevicesAdapter();
@@ -44,35 +53,63 @@ public class CastFileActivity extends AppCompatActivity {
             public void onClickItem(View view, int position) {
                 UpnpDevice upnpDevice = CastFileActivity.this.mediaRendererDevicesAdapter.getItem(position);
                 CastFileActivity.this.playMovie(upnpDevice);
+                CastFileActivity.this.hideUpnpDevices();
             }
         });
-
-
-        final RecyclerView devicesRecycleView = findViewById(R.id.media_renderer_devices_rv);
+        RecyclerView devicesRecycleView = findViewById(R.id.media_renderer_devices_rv);
         devicesRecycleView.setLayoutManager(new LinearLayoutManager(this));
         devicesRecycleView.setAdapter(this.mediaRendererDevicesAdapter);
 
 
-        final ConstraintLayout constraintLayout = findViewById(R.id.cast_file_footer_cl);
-        ViewTreeObserver viewTreeObserver = constraintLayout.getViewTreeObserver();
+        ViewTreeObserver viewTreeObserver = this.footerConstraintLayout.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                devicesRecycleView.setPadding(
-                        devicesRecycleView.getPaddingLeft(),
-                        devicesRecycleView.getPaddingTop(),
-                        devicesRecycleView.getPaddingRight(),
-                        constraintLayout.getMeasuredHeight());
+                CastFileActivity.this.adjustPadding();
             }
         });
 
 
-        discoverMediaRendererDevices();
+        this.castActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CastFileActivity.this.showUpnpDevices();
+            }
+        });
+
+
+        this.disableCastActionButton();
+        this.hideUpnpDevices();
+        this.discoverMediaRendererDevices();
+    }
+
+    private void adjustPadding() {
+        videoView.setPadding(
+                videoView.getPaddingLeft(),
+                videoView.getPaddingTop(),
+                videoView.getPaddingRight(),
+                this.footerConstraintLayout.getMeasuredHeight());
+    }
+
+    private void disableCastActionButton() {
+        this.castActionButton.hide();
+    }
+
+    private void enableCastActionButton() {
+        this.castActionButton.show();
+        this.castActionButton.bringToFront();
+    }
+
+    private void hideUpnpDevices() {
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    private void showUpnpDevices() {
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void discoverMediaRendererDevices() {
         new SsdpClient()
-                .addServerWebOSFilter()
                 .addDeviceMediaRendererFilter()
                 .addExcludeSameUsnFilter()
                 .setSsdpDiscoveryListener(new SsdpClient.SsdpDiscoveryListener() {
@@ -83,6 +120,7 @@ public class CastFileActivity extends AppCompatActivity {
                             public void run() {
                                 CastFileActivity.this.mediaRendererDevicesAdapter.addItem(upnpDevice);
                                 CastFileActivity.this.mediaRendererDevicesAdapter.notifyDataSetChanged();
+                                CastFileActivity.this.enableCastActionButton();
                             }
                         });
                     }
@@ -112,7 +150,8 @@ public class CastFileActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCommandSuccess() {}
+                    public void onCommandSuccess() {
+                    }
                 });
             }
         });

@@ -20,18 +20,29 @@
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@+id/tv_icon_iv"
         app:layout_constraintTop_toTopOf="parent"
-        tool:text="BRAVIA KJ-40W700C" />
+        tool:text="[LG] webOS TV SK8500PJA" />
 
     <TextView
-        android:id="@+id/media_renderer_device_display_name_tv"
+        android:id="@+id/media_renderer_device_manufacturer_tv"
         style="@style/TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/tv_icon_iv"
-        app:layout_constraintTop_toBottomOf="@+id/media_renderer_device_friendly_name_tv"
-        tool:text="Sony Corporation KJ-40W700C MINT1.7.0.1" />
+        app:layout_constraintTop_toBottomOf="@id/media_renderer_device_friendly_name_tv"
+        tool:text="LG Electronics." />
+
+    <TextView
+        android:id="@+id/media_renderer_server_location_tv"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_icon_iv"
+        app:layout_constraintTop_toBottomOf="@id/media_renderer_device_manufacturer_tv"
+        tool:text="http:/192.168.0.5:1234" />
 
     <ImageView
         android:id="@+id/tv_icon_iv"

@@ -50,16 +50,6 @@ public class SsdpClient {
         return this;
     }
 
-    public SsdpClient addServerWebOSFilter() {
-        this.discoveryFilterList.add(new SsdpDiscoveryFilter() {
-            @Override
-            public boolean isTargetServer(UpnpServer upnpServer) {
-                return upnpServer.getServer().contains("WebOS");
-            }
-        });
-        return this;
-    }
-
     public SsdpClient addExcludeSameUsnFilter() {
         this.discoveryFilterList.add(new SsdpDiscoveryFilter() {
             @Override
