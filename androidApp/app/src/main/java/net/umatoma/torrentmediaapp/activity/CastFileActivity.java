@@ -15,6 +15,7 @@ import android.widget.VideoView;
 import net.umatoma.torrentmediaapp.R;
 import net.umatoma.torrentmediaapp.adapter.MediaRendererDevicesAdapter;
 import net.umatoma.torrentmediaapp.adapter.OnClickItemListener;
+import net.umatoma.torrentmediaapp.repository.DownloadedFileRepository;
 import net.umatoma.torrentmediaapp.upnp.SsdpClient;
 import net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer;
 import net.umatoma.torrentmediaapp.upnp.UpnpDevice;
@@ -25,10 +26,13 @@ public class CastFileActivity extends AppCompatActivity {
 
     public static final String KEY_FILE_NAME = "fileName";
 
+    private String downloadedFileName;
+
     private VideoView videoView;
     private ConstraintLayout footerConstraintLayout;
     private FloatingActionButton castActionButton;
     private BottomSheetBehavior<View> bottomSheetBehavior;
+
     private MediaRendererDevicesAdapter mediaRendererDevicesAdapter;
 
     @Override
@@ -37,6 +41,7 @@ public class CastFileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cast_file);
 
 
+        this.downloadedFileName = getIntent().getStringExtra(KEY_FILE_NAME);
         this.castActionButton = findViewById(R.id.cast_action_fab);
         this.videoView = findViewById(R.id.cast_file_vv);
         this.footerConstraintLayout = findViewById(R.id.cast_file_footer_cl);
@@ -44,7 +49,7 @@ public class CastFileActivity extends AppCompatActivity {
 
 
         TextView fileNameTextView = findViewById(R.id.cast_file_name_tv);
-        fileNameTextView.setText(getIntent().getStringExtra(KEY_FILE_NAME));
+        fileNameTextView.setText(this.downloadedFileName);
 
 
         this.mediaRendererDevicesAdapter = new MediaRendererDevicesAdapter();
@@ -133,7 +138,8 @@ public class CastFileActivity extends AppCompatActivity {
     }
 
     private void playMovie(UpnpDevice upnpDevice) {
-        String currentUri = "http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4";
+        String currentUri = DownloadedFileRepository.getMediaFileStreamingUrl(this.downloadedFileName);
+
         final UpnpAVTransportPlayer avTransportPlayer = new UpnpAVTransportPlayer(upnpDevice);
         avTransportPlayer.setAVTransportURI(currentUri, new CommandCallback() {
             @Override
@@ -151,6 +157,16 @@ public class CastFileActivity extends AppCompatActivity {
 
                     @Override
                     public void onCommandSuccess() {
+                        avTransportPlayer.seek(new CommandCallback() {
+                            @Override
+                            public void onCommandFailure(Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onCommandSuccess() {
+                            }
+                        });
                     }
                 });
             }

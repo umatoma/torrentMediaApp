@@ -51,6 +51,21 @@ public class UpnpAVTransportPlayer {
         return this.sendCommand("SetAVTransportURI", xml, commandCallback);
     }
 
+    public UpnpAVTransportPlayer seek(final CommandCallback commandCallback) {
+        String xml = "" +
+                "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
+                "<s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                "<s:Body>" +
+                "<u:Seek xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">" +
+                "<InstanceID>0</InstanceID>" +
+                "<Unit>REL_TIME</Unit>" +
+                "<Target>00:00:00</Target>" +
+                "</u:Seek>" +
+                "</s:Body>" +
+                "</s:Envelope>";
+        return this.sendCommand("Seek", xml, commandCallback);
+    }
+
     public UpnpAVTransportPlayer play(final CommandCallback commandCallback) {
         String xml = "" +
                 "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +

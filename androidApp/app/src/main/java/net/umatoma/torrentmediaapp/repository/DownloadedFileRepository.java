@@ -1,5 +1,6 @@
 package net.umatoma.torrentmediaapp.repository;
 
+import android.net.Uri;
 import android.util.Log;
 
 import net.umatoma.torrentmediaapp.BuildConfig;
@@ -25,6 +26,14 @@ public class DownloadedFileRepository {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         this.downloadedFilesService = retrofit.create(DownloadedFilesService.class);
+    }
+
+    public static String getMediaFileStreamingUrl(String downloadedFileName) {
+        return Uri.parse(BuildConfig.SERVER_URL)
+                .buildUpon()
+                .path("/file/streaming/" + downloadedFileName)
+                .build()
+                .toString();
     }
 
     public void getDownloadedFiles(final DownloadedFileRepositoryCallback callback) {

@@ -30,4 +30,13 @@ public class UpnpServer {
     public String getUsn() {
         return usn;
     }
+
+    @Override
+    public String toString() {
+        return "ip: " + ip + ", " +
+                "location: " + location + ", " +
+                "server: " + server + ", " +
+                "serverType: " + serverType + ", " +
+                "usn: " + usn;
+    }
 }

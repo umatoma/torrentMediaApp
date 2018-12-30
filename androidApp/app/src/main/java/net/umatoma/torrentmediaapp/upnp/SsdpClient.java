@@ -2,6 +2,7 @@ package net.umatoma.torrentmediaapp.upnp;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -17,6 +18,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class SsdpClient {
+
+    private static final String TAG = "SsdpClient";
 
     private static final String SSDP_ADDRESS = "239.255.255.250";
     private static final int SSDP_PORT = 1900;
@@ -86,6 +89,7 @@ public class SsdpClient {
 
                             UpnpServer upnpServer = UpnpServerStringParser.parseString(
                                     new String(datagramPacket.getData()), datagramPacket.getAddress().getHostAddress());
+                            Log.i(TAG, "Found a UPnP server: " + upnpServer.toString());
 
                             if (SsdpClient.this.isTargetServer(upnpServer)) {
                                 SsdpClient.this.upnpServerList.add(upnpServer);
