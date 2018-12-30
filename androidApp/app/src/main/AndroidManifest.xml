@@ -16,15 +16,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.DownloadedFilesActivity">
+        <activity
+            android:name=".activity.DownloadedFilesActivity"
+            android:label="Downloaded Files">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CastFileActivity" />
-        <activity android:name=".activity.SearchTorrentActivity"></activity>
+        <activity
+            android:name=".activity.CastFileActivity"
+            android:label="Media Player" />
+        <activity
+            android:name=".activity.SearchTorrentActivity"
+            android:label="Search Torrents" />
     </application>
 
 </manifest>
