@@ -34,11 +34,14 @@ public class PlayMediaActivity extends AppCompatActivity {
 
     private String downloadedFileName;
 
+    private TextView fileNameTextView;
     private VideoView videoView;
+    private ImageButton videoOverlay;
     private ConstraintLayout mediaPlayerControlLayout;
     private SeekBar mediaPlayerSeekBar;
     private ImageButton mediaPlayerPlayButton;
     private FloatingActionButton castActionButton;
+    private RecyclerView devicesRecycleView;
     private BottomSheetBehavior<View> bottomSheetBehavior;
 
     private MediaRendererDevicesAdapter mediaRendererDevicesAdapter;
@@ -65,19 +68,47 @@ public class PlayMediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_media);
 
-
         this.downloadedFileName = getIntent().getStringExtra(KEY_FILE_NAME);
-        this.castActionButton = findViewById(R.id.cast_action_fab);
+
+        this.fileNameTextView = findViewById(R.id.media_player_control_media_name_tv);
         this.videoView = findViewById(R.id.play_media_vv);
+        this.videoOverlay = findViewById(R.id.media_player_overlay_iv);
         this.mediaPlayerControlLayout = findViewById(R.id.media_player_control_cl);
         this.mediaPlayerSeekBar = findViewById(R.id.media_player_seek_bar);
         this.mediaPlayerPlayButton = findViewById(R.id.media_player_play_btn);
+        this.castActionButton = findViewById(R.id.cast_action_fab);
+        this.devicesRecycleView = findViewById(R.id.upnp_media_renderer_devices_rv);
         this.bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.upnp_devices_cl));
 
+        this.initViews();
+        this.discoverMediaRendererDevices();
+    }
 
-        TextView fileNameTextView = findViewById(R.id.media_player_control_media_name_tv);
-        fileNameTextView.setText(this.downloadedFileName);
+    @Override
+    protected void onDestroy() {
+        this.stopMovie();
 
+        super.onDestroy();
+    }
+
+    private void initViews() {
+        this.fileNameTextView.setText(this.downloadedFileName);
+
+        ViewTreeObserver viewTreeObserver = this.mediaPlayerControlLayout.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                PlayMediaActivity.this.adjustPadding();
+            }
+        });
+
+        this.initUpnpViews();
+        this.initMediaPlayerViews();
+    }
+
+    private void initUpnpViews() {
+        this.disableCastActionButton();
+        this.hideUpnpDevices();
 
         this.mediaRendererDevicesAdapter = new MediaRendererDevicesAdapter();
         this.mediaRendererDevicesAdapter.setOnClickItemListener(new OnClickItemListener() {
@@ -88,9 +119,8 @@ public class PlayMediaActivity extends AppCompatActivity {
                 PlayMediaActivity.this.hideUpnpDevices();
             }
         });
-        RecyclerView devicesRecycleView = findViewById(R.id.upnp_media_renderer_devices_rv);
-        devicesRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        devicesRecycleView.setAdapter(this.mediaRendererDevicesAdapter);
+        this.devicesRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        this.devicesRecycleView.setAdapter(this.mediaRendererDevicesAdapter);
 
         this.castActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,17 +128,9 @@ public class PlayMediaActivity extends AppCompatActivity {
                 PlayMediaActivity.this.showUpnpDevices();
             }
         });
+    }
 
-
-        ViewTreeObserver viewTreeObserver = this.mediaPlayerControlLayout.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                PlayMediaActivity.this.adjustPadding();
-            }
-        });
-
-
+    private void initMediaPlayerViews() {
         this.mediaPlayerPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,18 +168,6 @@ public class PlayMediaActivity extends AppCompatActivity {
                 PlayMediaActivity.this.stopMovie();
             }
         });
-
-
-        this.disableCastActionButton();
-        this.hideUpnpDevices();
-        this.discoverMediaRendererDevices();
-    }
-
-    @Override
-    protected void onDestroy() {
-        this.stopMovie();
-
-        super.onDestroy();
     }
 
     private void adjustPadding() {
@@ -225,6 +235,7 @@ public class PlayMediaActivity extends AppCompatActivity {
         Uri videoURI = Uri.parse(this.getMediaFileStreamingUrl());
         this.videoView.setVideoURI(videoURI);
         this.videoView.start();
+        this.videoOverlay.setVisibility(View.INVISIBLE);
         this.mediaPlayerPlayButton.setImageResource(R.drawable.ic_stop_black_24dp);
     }
 
