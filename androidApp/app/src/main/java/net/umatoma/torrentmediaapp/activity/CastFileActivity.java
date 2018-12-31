@@ -10,17 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import net.umatoma.torrentmediaapp.R;
 import net.umatoma.torrentmediaapp.adapter.MediaRendererDevicesAdapter;
 import net.umatoma.torrentmediaapp.adapter.OnClickItemListener;
+import net.umatoma.torrentmediaapp.async.PlayMovieAsyncTask;
 import net.umatoma.torrentmediaapp.repository.DownloadedFileRepository;
 import net.umatoma.torrentmediaapp.upnp.SsdpClient;
-import net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer;
 import net.umatoma.torrentmediaapp.upnp.UpnpDevice;
-
-import static net.umatoma.torrentmediaapp.upnp.UpnpAVTransportPlayer.CommandCallback;
 
 public class CastFileActivity extends AppCompatActivity {
 
@@ -139,37 +138,16 @@ public class CastFileActivity extends AppCompatActivity {
 
     private void playMovie(UpnpDevice upnpDevice) {
         String currentUri = DownloadedFileRepository.getMediaFileStreamingUrl(this.downloadedFileName);
-
-        final UpnpAVTransportPlayer avTransportPlayer = new UpnpAVTransportPlayer(upnpDevice);
-        avTransportPlayer.setAVTransportURI(currentUri, new CommandCallback() {
+        new PlayMovieAsyncTask(upnpDevice, new PlayMovieAsyncTask.Callback() {
             @Override
-            public void onCommandFailure(Exception e) {
-                e.printStackTrace();
+            public void onSuccess() {
+                Toast.makeText(CastFileActivity.this, "Start casting", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onCommandSuccess() {
-                avTransportPlayer.play(new CommandCallback() {
-                    @Override
-                    public void onCommandFailure(Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onCommandSuccess() {
-                        avTransportPlayer.seek(new CommandCallback() {
-                            @Override
-                            public void onCommandFailure(Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            public void onCommandSuccess() {
-                            }
-                        });
-                    }
-                });
+            public void onFailure(Exception e) {
+                Toast.makeText(CastFileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }).execute(currentUri);
     }
 }

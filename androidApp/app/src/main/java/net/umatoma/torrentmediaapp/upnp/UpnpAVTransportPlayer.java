@@ -1,11 +1,9 @@
 package net.umatoma.torrentmediaapp.upnp;
 
 import android.net.Uri;
+import android.text.TextUtils;
+import android.util.Log;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,6 +12,7 @@ import okhttp3.Response;
 
 public class UpnpAVTransportPlayer {
 
+    private static final String TAG = "UpnpAVTransportPlayer";
     private static final MediaType MEDIA_TYPE_XML = MediaType.parse("text/xml; charset=utf-8");
 
     private UpnpDevice upnpDevice;
@@ -22,65 +21,65 @@ public class UpnpAVTransportPlayer {
         this.upnpDevice = upnpDevice;
     }
 
-    public UpnpAVTransportPlayer setAVTransportURI(String currentUri, final CommandCallback commandCallback) {
-        String xml = "" +
-                "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
-                "<s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-                "<s:Body>" +
-                "<u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">" +
+    public void setAVTransportURI(String currentUri) throws Exception {
+        String commandName = "SetAVTransportURI";
+        String currentURIMetaData = TextUtils.htmlEncode(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                        "<DIDL-Lite xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:sec=\"http://www.sec.co.kr/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\">\n" +
+                        "   <item id=\"f-0\" parentID=\"0\" restricted=\"0\">\n" +
+                        "      <dc:title>Video</dc:title>\n" +
+                        "      <dc:creator>vGet</dc:creator>\n" +
+                        "      <upnp:class>object.item.videoItem</upnp:class>\n" +
+                        "      <res protocolInfo=\"http-get:*:video/mp4:DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000\" sec:URIType=\"public\">" + currentUri + "</res>\n" +
+                        "   </item>\n" +
+                        "</DIDL-Lite>"
+        );
+        String body = "" +
                 "<InstanceID>0</InstanceID>" +
                 "<CurrentURI>" + currentUri + "</CurrentURI>" +
-                "<CurrentURIMetaData>" +
-                "&lt;DIDL-Lite " +
-                "xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\" " +
-                "xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" " +
-                "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" " +
-                "xmlns:sec=\"http://www.sec.co.kr/\"&gt;&lt;" +
-                "item " +
-                "id=\"f-0\" " +
-                "parentID=\"0\" " +
-                "restricted=\"0\"&gt;&lt;dc:title&gt;Video&lt;/dc:title&gt;&lt;dc:creator&gt;vGet&lt;/dc:creator&gt;&lt;upnp:class&gt;object.item.videoItem&lt;/upnp:class&gt;&lt;res " +
-                "protocolInfo=\"http-get:*:video/mp4:DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000\" " +
-                "sec:URIType=\"public\"&gt;" + currentUri + "&lt;/res&gt;&lt;" +
-                "/item&gt;&lt;" +
-                "/DIDL-Lite&gt;" +
-                "</CurrentURIMetaData>" +
-                "</u:SetAVTransportURI>" +
-                "</s:Body>" +
-                "</s:Envelope>";
-        return this.sendCommand("SetAVTransportURI", xml, commandCallback);
+                "<CurrentURIMetaData>" + currentURIMetaData + "</CurrentURIMetaData>";
+        String xmlBody = new CommandXmlBuilder()
+                .setCommandName(commandName)
+                .setBody(body)
+                .build();
+
+        this.sendCommand(commandName, xmlBody);
     }
 
-    public UpnpAVTransportPlayer seek(final CommandCallback commandCallback) {
-        String xml = "" +
-                "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
-                "<s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-                "<s:Body>" +
-                "<u:Seek xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">" +
-                "<InstanceID>0</InstanceID>" +
-                "<Unit>REL_TIME</Unit>" +
-                "<Target>00:00:00</Target>" +
-                "</u:Seek>" +
-                "</s:Body>" +
-                "</s:Envelope>";
-        return this.sendCommand("Seek", xml, commandCallback);
+    public void seek() throws Exception {
+        String commandName = "Seek";
+        String body = "<InstanceID>0</InstanceID><Unit>REL_TIME</Unit><Target>00:00:00</Target>";
+        String xmlBody = new CommandXmlBuilder()
+                .setCommandName(commandName)
+                .setBody(body)
+                .build();
+
+        this.sendCommand(commandName, xmlBody);
     }
 
-    public UpnpAVTransportPlayer play(final CommandCallback commandCallback) {
-        String xml = "" +
-                "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
-                "<s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-                "<s:Body>" +
-                "<u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">" +
-                "<InstanceID>0</InstanceID>" +
-                "<Speed>1</Speed>" +
-                "</u:Play>" +
-                "</s:Body>" +
-                "</s:Envelope>";
-        return this.sendCommand("Play", xml, commandCallback);
+    public void stop() throws Exception {
+        String commandName = "Stop";
+        String body = "<InstanceID>0</InstanceID>";
+        String xmlBody = new CommandXmlBuilder()
+                .setCommandName(commandName)
+                .setBody(body)
+                .build();
+
+        this.sendCommand(commandName, xmlBody);
     }
 
-    private UpnpAVTransportPlayer sendCommand(final String commandName, String xmlBody, final CommandCallback commandCallback) {
+    public void play() throws Exception {
+        String commandName = "Play";
+        String body = "<InstanceID>0</InstanceID><Speed>1</Speed>";
+        String xmlBody = new CommandXmlBuilder()
+                .setCommandName(commandName)
+                .setBody(body)
+                .build();
+
+        this.sendCommand(commandName, xmlBody);
+    }
+
+    private void sendCommand(final String commandName, String xmlBody) throws Exception {
         String controlUrl = Uri.parse(this.upnpDevice.getServerLocation())
                 .buildUpon()
                 .path(this.upnpDevice.getAVTransportService().getControlURL())
@@ -90,32 +89,48 @@ public class UpnpAVTransportPlayer {
         Request request = new Request.Builder()
                 .url(controlUrl)
                 .post(requestBody)
-                .addHeader("SOAPACTION", "\"urn:schemas-upnp-org:service:AVTransport:1#" + commandName + "\"")
+                .addHeader("Soapaction", "\"urn:schemas-upnp-org:service:AVTransport:1#" + commandName + "\"")
                 .build();
 
         OkHttpClient httpClient = new OkHttpClient.Builder().build();
-        httpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                commandCallback.onCommandFailure(e);
-            }
+        Response response = httpClient.newCall(request).execute();
+        String responseBody = response.body().string();
 
-            @Override
-            public void onResponse(Call call, Response response) {
-                if (response.isSuccessful()) {
-                    commandCallback.onCommandSuccess();
-                } else {
-                    commandCallback.onCommandFailure(new Exception("Command " + commandName + " failed"));
-                }
-            }
-        });
+        if (response.isSuccessful()) {
+            Log.i(TAG, "Succeeded in requesting the " + commandName + " command");
+            return;
+        }
 
-        return this;
+        String errorMessage = "Failed to request the " + commandName + " command: " + String.valueOf(response.code());
+        Log.e(TAG, errorMessage);
+        Log.e(TAG, responseBody);
+        throw new Exception(errorMessage);
     }
 
-    public interface CommandCallback {
-        void onCommandFailure(Exception e);
+    private class CommandXmlBuilder {
+        private String commandName;
+        private String body;
 
-        void onCommandSuccess();
+        public CommandXmlBuilder setCommandName(String commandName) {
+            this.commandName = commandName;
+            return this;
+        }
+
+        public CommandXmlBuilder setBody(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public String build() {
+            return "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
+                    "    <s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                    "    <s:Body>" +
+                    "        <u:" + this.commandName + " xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">" +
+                    "            " + this.body +
+                    "        </u:" + this.commandName + ">" +
+                    "    </s:Body>" +
+                    "</s:Envelope>";
+        }
     }
+
 }
