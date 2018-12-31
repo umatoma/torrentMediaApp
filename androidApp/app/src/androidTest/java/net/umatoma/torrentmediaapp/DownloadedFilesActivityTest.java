@@ -1,13 +1,12 @@
 package net.umatoma.torrentmediaapp;
 
 import android.content.Intent;
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.umatoma.torrentmediaapp.activity.CastFileActivity;
+import net.umatoma.torrentmediaapp.activity.PlayMediaActivity;
 import net.umatoma.torrentmediaapp.activity.DownloadedFilesActivity;
 import net.umatoma.torrentmediaapp.activity.SearchTorrentActivity;
 
@@ -89,7 +88,7 @@ public class DownloadedFilesActivityTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
 
-        intended(hasComponent(CastFileActivity.class.getName()));
+        intended(hasComponent(PlayMediaActivity.class.getName()));
         intended(hasExtra("fileName", "FILE_A.txt"));
     }
 

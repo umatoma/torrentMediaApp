@@ -7,7 +7,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.umatoma.torrentmediaapp.activity.CastFileActivity;
+import net.umatoma.torrentmediaapp.activity.PlayMediaActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,8 +25,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class CastFileActivityTest {
 
     @Rule
-    public ActivityTestRule<CastFileActivity> activityTestRule =
-            new ActivityTestRule<>(CastFileActivity.class);
+    public ActivityTestRule<PlayMediaActivity> activityTestRule =
+            new ActivityTestRule<>(PlayMediaActivity.class);
 
     @Before
     public void setUp() {

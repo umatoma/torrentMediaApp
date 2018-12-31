@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.CastFileActivity"
+            android:name=".activity.PlayMediaActivity"
             android:label="Media Player" />
         <activity
             android:name=".activity.SearchTorrentActivity"

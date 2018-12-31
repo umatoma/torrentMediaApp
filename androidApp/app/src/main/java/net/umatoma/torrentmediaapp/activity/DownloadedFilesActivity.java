@@ -38,8 +38,8 @@ public class DownloadedFilesActivity extends AppCompatActivity {
             public void onClickItem(View view, int position) {
                 DownloadedFile downloadedFile = DownloadedFilesActivity.this.downloadedFilesAdapter.getItem(position);
 
-                Intent startCastFileActivityIntent = new Intent(DownloadedFilesActivity.this, CastFileActivity.class);
-                startCastFileActivityIntent.putExtra(CastFileActivity.KEY_FILE_NAME, downloadedFile.getName());
+                Intent startCastFileActivityIntent = new Intent(DownloadedFilesActivity.this, PlayMediaActivity.class);
+                startCastFileActivityIntent.putExtra(PlayMediaActivity.KEY_FILE_NAME, downloadedFile.getName());
 
                 startActivity(startCastFileActivityIntent);
             }
