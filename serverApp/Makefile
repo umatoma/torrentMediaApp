@@ -5,3 +5,6 @@ start:
 
 test:
 	npm test
+
+deploy:
+	npx babel-node deploy.js

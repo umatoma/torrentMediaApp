@@ -6,34 +6,33 @@ jobs:
     working_directory: ~/junit
     steps:
       - checkout
-      - run:
-          name: install
-          command: cd serverApp; npm install
+      - run: cd serverApp && npm install
       - run:
           name: test
-          command: cd serverApp; make test
+          command: cd serverApp && make test
           environment:
             MOCHA_FILE: junit/serverApp/test-results.xml
           when: always
       - store_test_results:
           path: ~/junit
-  testAndroidApp:
+  deployServerApp:
     docker:
-      - image: circleci/android:api-28-alpha
-    working_directory: ~/code
+      - image: circleci/node:10
+    working_directory: ~/junit
     steps:
       - checkout
-      - run:
-          name: install
-          command: cd androidApp && make installDependencies
-      - run:
-          name: test
-          command: cd androidApp && make unitTest
-      - store_test_results:
-          path: androidApp/app/build/test-results
+      - add_ssh_keys:
+          fingerprints:
+            - "00:b1:c2:86:a9:fc:a7:c5:59:f0:27:32:af:68:ec:a1"
+      - run: sudo apt-get install -y rsync
+      - run: ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+      - run: cd serverApp && npm install
+      - run: cd serverApp && SSH_USER=$SSH_USER SSH_HOST=$SSH_HOST make deploy
 workflows:
   version: 2
-  testAll:
+  testAndDeploy:
     jobs:
       - testServerApp
-      # - testAndroidApp
+      - deployServerApp:
+          requires:
+            - testServerApp

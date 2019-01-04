@@ -63,3 +63,4 @@ typings/
 # custom
 /download
 test-results.xml
+package-lock.json

@@ -1,5 +1,5 @@
 {
-    "name": "TorrentAndMediaApp",
+    "name": "torrent_media_app",
     "version": "0.0.0",
     "private": true,
     "scripts": {
@@ -14,6 +14,7 @@
         "cookie-parser": "^1.4.3",
         "debug": "^4.1.0",
         "express": "^4.16.4",
+        "forever": "^0.15.3",
         "morgan": "^1.9.1",
         "send": "^0.16.2",
         "webtorrent": "^0.102.4"
@@ -24,6 +25,7 @@
         "mocha": "^5.2.0",
         "mocha-circleci-reporter": "0.0.3",
         "sinon": "^7.0.0",
+        "ssh-pool": "^4.1.2",
         "supertest": "^3.3.0"
     },
     "babel": {
