@@ -34,6 +34,10 @@ export default class IndexRouter {
             asyncWrapper(this.getFilesRouteHandler.bind(this))
         )
         this.router.get(
+            '/files/*',
+            asyncWrapper(this.getFilesRouteHandler.bind(this))
+        )
+        this.router.get(
             '/file/streaming/:fileName',
             asyncWrapper(this.getFileStreamingRouteHandler.bind(this))
         )
@@ -52,8 +56,13 @@ export default class IndexRouter {
     }
 
     async getFilesRouteHandler(req, res) {
-        const dirents = await this.asyncFileSystem.readdirAsync(
+        const directoryPath = path.join(
             this.downloadedFileDirPath,
+            req.path.replace(/^\/files\/?/, '')
+        )
+
+        const dirents = await this.asyncFileSystem.readdirAsync(
+            directoryPath,
             { withFileTypes: true }
         )
         const files = dirents.map(dirent => ({

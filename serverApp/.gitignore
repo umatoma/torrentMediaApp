@@ -64,3 +64,5 @@ typings/
 /download
 test-results.xml
 package-lock.json
+public/javascripts/index.*
+.cache

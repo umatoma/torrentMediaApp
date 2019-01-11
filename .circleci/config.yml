@@ -27,7 +27,7 @@ jobs:
       - run: sudo apt-get install -y rsync
       - run: ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
       - run: cd serverApp && npm install
-      - run: cd serverApp && SSH_USER=$SSH_USER SSH_HOST=$SSH_HOST make deploy
+      - run: cd serverApp && SSH_USER=$SSH_USER SSH_HOST=$SSH_HOST BASIC_USER=$BASIC_USER BASIC_PASS=$BASIC_PASS make deploy
 workflows:
   version: 2
   testAndDeploy:
